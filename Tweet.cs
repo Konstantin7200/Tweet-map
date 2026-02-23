@@ -10,7 +10,7 @@ namespace Tweet_map
     {
         private DateTime created;
 
-        private string text;
+        private string text;    
 
         public string StateCode { get; set; }
         public double? SentimentScore { get; set; }
