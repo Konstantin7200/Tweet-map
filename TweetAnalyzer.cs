@@ -14,6 +14,28 @@ namespace TwitterProj.Services
             AnalyzeTweetSentiments(tweets, sentiments);
             return GroupByState(tweets, stateBoundaries);
         }
+
+        private static void GroupTweets(List<Tweet> tweets, List<StateBoundary> stateBoundaries)
+        {
+            foreach (StateBoundary stateBoundary in stateBoundaries)
+            {
+                foreach (List<PointF> polygon in stateBoundary.Polygons)
+                {
+                    foreach (Tweet tweet in tweets)
+                    {
+                        using (GraphicsPath path = new GraphicsPath())
+                        {
+                            path.AddPolygon(polygon.ToArray());
+                            if (path.IsVisible(new PointF((float)tweet.Longitude, (float)tweet.Latitude)))
+                            {
+                                tweet.StateCode = stateBoundary.StateCode;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
         private static void AnalyzeTweetSentiments(List<Tweet> tweets, Dictionary<string, float> sentiments)
         {
             foreach (Tweet tweet in tweets)
@@ -48,6 +70,7 @@ namespace TwitterProj.Services
 
         private static List<StateSentiment> GroupByState(List<Tweet> tweets, List<StateBoundary> statesBoundaries)
         {
+            GroupTweets(tweets, statesBoundaries);
             var validTweets = tweets.Where(tweet => !string.IsNullOrEmpty(tweet.StateCode) && tweet.SentimentScore.HasValue).ToList();
             var groupTweets = validTweets.GroupBy(tweet => tweet.StateCode);
             var result = new List<StateSentiment>();
@@ -64,6 +87,24 @@ namespace TwitterProj.Services
                 };
 
                 result.Add(stateSentiment);
+            }
+            foreach (StateBoundary stateBoundary in statesBoundaries)
+            {
+                bool flag = false;
+                foreach (StateSentiment stateSentiment in result)
+                {
+                    if (stateSentiment.StateCode == stateBoundary.StateCode)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    result.Add(new StateSentiment(stateBoundary.StateCode, stateBoundary.Polygons));
+                }
+                result.Add(stateSentiment);
+
             }
             return result;
         }
