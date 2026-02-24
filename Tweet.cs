@@ -1,65 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace program
+namespace TwitterProj.Models
 {
     public class Tweet
     {
-        private DateTime created;
-
-        private string text;    
-
+        private readonly float latitude;
+        private readonly float longitude;
+        private readonly DateTime tweetTime;
+        private readonly string text;
         public string StateCode { get; set; }
-        public double? SentimentScore { get; set; }
-
-        private double latitude;
-
-        public double longitude;
-
-        public double Latitude
+        public float? SentimentScore { get; set; }
+        public PointF Location
         {
-            get { return latitude; }
-            set { latitude = value; }
-        }
-        public double Longitude
-        {
-            get { return longitude; }
-            set {  longitude = value; }
+            get { return new PointF(longitude, latitude); }
         }
 
-        public string Text
-        {
-            get { return text; }
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentNullException("Tweet" + nameof(value) + " is empty");
-                text = value;
-            }
-        }
-            
-        public DateTime Created
-        {
-            get { return created; }
-            set { created = value; }
-        }
+        public float Latitude => latitude;
+        public float Longitude=> longitude;
 
-        public Tweet() { }
-        public Tweet(string text, double latitude, double longitude, DateTime created)
+        public DateTime TweetTime => tweetTime;
+
+        public string Text => text;
+
+        public Tweet(float latitude, float longitude, DateTime tweetTime, string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                throw new ArgumentException("Tweet is empty", nameof(text));
             if (latitude < -90 || latitude > 90)
                 throw new ArgumentException("incorrect latitude", nameof(latitude));
             if (longitude < -180 || longitude > 180)
                 throw new ArgumentException("incorrect longitude", nameof(longitude));
-            Text = text;
-            Created = created;
-            Latitude = latitude;   
-            Longitude = longitude;
+            if (string.IsNullOrWhiteSpace(text))
+                throw new ArgumentException("Tweet is empty", nameof(text));
+
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.tweetTime = tweetTime;
+            this.text = text;
+
+            SentimentScore = null;
+            StateCode = null;
         }
     }
 }

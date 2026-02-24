@@ -7,9 +7,8 @@ namespace program
     public class StateSentiment // for kostyan
     {
         public string StateCode { get; }
-        public double? AverageSentiment { get; set; } //change (float -> double)
+        public double? AverageSentiment { get; set; }
         public List<List<PointF>> Polygons { get; }
-
         public StateSentiment(string stateCode, List<List<PointF>> polygons)
         {
             StateCode = stateCode;
@@ -18,3 +17,4 @@ namespace program
         }
     }
 }
+
