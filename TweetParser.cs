@@ -57,15 +57,32 @@ namespace program
                     return null;
                 }
 
+                string dateString = fields[1].Trim();
+                DateTime tweetDate;
+
+                // Try to parse Data "2014-02-16 03:11:36"
+                if (!DateTime.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss",
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out tweetDate))
+                {
+                    // Standart Data 
+                    if (!DateTime.TryParse(dateString, CultureInfo.InvariantCulture, DateTimeStyles.None, out tweetDate))
+                    {
+                        Console.WriteLine($"Не удалось распарсить дату: {dateString}");
+                        return null;
+                    }
+                }
+
                 string text = fields[2];
 
-                if (string.IsNullOrWhiteSpace(text))
+                string cleanedText = CleanTweetText(text);
+
+                if (string.IsNullOrWhiteSpace(cleanedText))
                 {
                     Console.WriteLine($"Пустой текст твита");
                     return null;
                 }
 
-                return new Tweet(float.Parse(parts[0].Trim(), CultureInfo.InvariantCulture), float.Parse(parts[1].Trim(), CultureInfo.InvariantCulture),new DateTime(),text);
+                return new Tweet(float.Parse(parts[0].Trim(), CultureInfo.InvariantCulture), float.Parse(parts[1].Trim(), CultureInfo.InvariantCulture), tweetDate, cleanedText);
             }
             catch (Exception ex)
             {
@@ -73,6 +90,30 @@ namespace program
                 Console.WriteLine($"Ошибка: {ex.Message}");
                 return null;
             }
+        }
+        private static string CleanTweetText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return string.Empty;
+
+            string[] words = text.Split(' ');
+            List<string> filteredWords = new List<string>();
+
+            foreach (string word in words)
+            {
+                if (word.StartsWith("@"))
+                    continue;
+
+                if (word.StartsWith("http://") || word.StartsWith("https://") || word.StartsWith("www."))
+                    continue;
+
+                if (word.Contains("://") || word.Contains("t.co/"))
+                    continue;
+
+                filteredWords.Add(word);
+            }
+
+            return string.Join(" ", filteredWords).Trim();
         }
     }
 }
