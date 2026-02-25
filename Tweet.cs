@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace TwitterProj.Models
+namespace program
 {
     public class Tweet
     {

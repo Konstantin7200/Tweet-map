@@ -15,8 +15,7 @@ namespace program
             List<Tweet> tweets = TweetParser.ParseTweetsFromJson("cali_tweets2014.txt");
             Console.WriteLine(states.Count);
             Dictionary<string,float> dict = CSVParser.CreateDictionary("sentiments.csv");
-            TweetAnalyzer tweetAnalyzer = new TweetAnalyzer(states, dict);
-            var zalupa = tweetAnalyzer.AnalyzeTweets(tweets);
+            var zalupa = TweetAnalyzer.AnalyzeTweets(tweets,states,dict);
             Console.WriteLine(zalupa.Count);
             MapDrawer.drawMap(zalupa, tweets);
         }

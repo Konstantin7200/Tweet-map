@@ -42,16 +42,11 @@ namespace program
                 if (string.IsNullOrWhiteSpace(line))
                     return null;
 
-                Tweet tweet = new Tweet();
-
                 int startBracket = line.IndexOf('[');
                 int endBracket = line.IndexOf(']');
 
                 string coords = line.Substring(startBracket + 1, endBracket - startBracket - 1);
                 string[] parts = coords.Split(',');
-
-                tweet.Latitude = double.Parse(parts[0].Trim(), CultureInfo.InvariantCulture);
-                tweet.Longitude = double.Parse(parts[1].Trim(), CultureInfo.InvariantCulture);
 
                 string remaining = line.Substring(endBracket + 1).Trim();
                 string[] fields = remaining.Split('\t');
@@ -69,9 +64,8 @@ namespace program
                     Console.WriteLine($"Пустой текст твита");
                     return null;
                 }
-                tweet.Text = text;
 
-                return tweet;
+                return new Tweet(float.Parse(parts[0].Trim(), CultureInfo.InvariantCulture), float.Parse(parts[1].Trim(), CultureInfo.InvariantCulture),new DateTime(),text);
             }
             catch (Exception ex)
             {
