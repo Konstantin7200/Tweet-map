@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text.Json;
 namespace program
 {
-    class MapDrawer
+    static class MapDrawer
         {
             private const int HEIGHT = 2500, WIDTH = 3500,DOT_RADIUS = 15;
             static public void drawMap(List<StateSentiment> states,List<Tweet> tweets)
@@ -83,20 +83,10 @@ namespace program
                 {
                     using (Brush brush = new SolidBrush(Color.Black))
                     {
-                        //if (name != "FL")
                         {
                             graphics.DrawString(name, font, brush, new PointF(((points.Max(p => p.X) + points.Min(p => p.X))) / 2, (points.Max(p => p.Y) + points.Min(p => p.Y)) / 2));
                             return;
                         }
-                        /*float x = 0, y = 0;
-                        foreach (PointF point in points)
-                        {
-                            x += point.X;
-                            y += point.Y;
-                        }
-                        x = x / points.Count;
-                        y = y / points.Count;
-                        graphics.DrawString(name, font, brush, new PointF(x, y));*/
                     }
                 }
             }
