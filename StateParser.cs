@@ -19,6 +19,9 @@ namespace program
                 foreach (JsonProperty stateProperty in root.EnumerateObject())
                 {
                     string stateCode = stateProperty.Name;
+
+                    if (stateProperty.Name == "PR") continue; //Skip Puerto Rico
+
                     JsonElement stateData = stateProperty.Value;
 
                     List<List<PointF>> polygons = ExtractPolygonsUniversal(stateData);
